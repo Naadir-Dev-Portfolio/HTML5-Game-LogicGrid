@@ -1,0 +1,228 @@
+<!--
+Project: Logic Grid
+Created by Naadir.
+
+Disclaimer: This project was built using AI-assisted coding LLMs under my direction and supervision.
+It is included in my portfolio to demonstrate my ability to leverage language models to design, structure, and deliver interactive, educational web applications.
+Logic Grid is a grid-based Boolean logic puzzle game built with HTML5, CSS3, Vanilla JavaScript (ES6), and Canvas 2D.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Logic Grid</title>
+  <style>
+    :root {
+      --bg:#121212;--fg:#eee;--card:#1e1e1e;--accent:#7ab4ff;
+      --good:#66bb6a;--bad:#ef5350;--hi:#ffd54f;
+      --on:#ffeb3b;--off:#333;
+    }
+    * {box-sizing:border-box;margin:0;padding:0;font-family:Manrope,sans-serif;}
+    html,body{height:100%;overflow:hidden;}
+    body {
+      background:var(--bg); color:var(--fg);
+      display:flex;flex-direction:column;
+    }
+    canvas#backgroundParticles {
+      position:fixed;top:0;left:0;
+      width:100vw;height:100vh;
+      z-index:-1;pointer-events:none;
+    }
+    header {
+      padding:1rem 2rem; display:flex;align-items:center;gap:2rem;
+      background:rgba(0,0,0,0.3);font-size:1.2rem;
+    }
+    header span {margin-right:.5rem;}
+    #restartBtn {
+      margin-left:auto; background:var(--accent); color:var(--bg);
+      border:none;padding:.5rem 1rem;border-radius:6px;
+      cursor:pointer;transition:transform .1s;
+    }
+    #restartBtn:hover {transform:scale(1.05);}
+    .game-area {
+      flex:1;display:flex;align-items:center;justify-content:center;
+      position:relative;padding:1rem;
+    }
+    #grid {
+      display:grid;grid-template-columns:repeat(5,1fr);
+      gap:4px;width:80vmin;height:80vmin;
+    }
+    .tile {
+      display:flex;align-items:center;justify-content:center;
+      font-size:1.2rem;cursor:pointer;border-radius:4px;
+      user-select:none;
+    }
+    .tile.on{background:var(--on);}
+    .tile.off{background:var(--off);}
+    #winOverlay {
+      position:absolute;top:50%;left:50%;
+      transform:translate(-50%,-50%) scale(0);
+      background:var(--accent);color:var(--bg);
+      padding:1rem 2rem;border-radius:8px;
+      font-size:2rem;pointer-events:none;
+      transition:transform .3s ease-out;
+    }
+    #winOverlay.show{transform:translate(-50%,-50%) scale(1);}
+    /* info & instructions */
+    #infoToggle,#toggleInstructions {
+      position:fixed;bottom:24px;background:var(--card);
+      color:var(--fg);border:none;cursor:pointer;
+      z-index:3;font-size:1.6rem;padding:1rem;border-radius:6px;
+    }
+    #infoToggle{left:24px;}
+    #toggleInstructions{right:24px;}
+    #infoBox,#instructions {
+      position:fixed;bottom:68px;width:320px;max-width:90vw;
+      max-height:0;overflow:hidden;background:var(--card);
+      border:0 solid var(--accent);border-radius:12px;
+      box-shadow:0 4px 24px rgba(0,0,0,0.5);
+      color:var(--fg);padding:0 16px;z-index:3;
+      transition:max-height .4s,padding .3s,border-width .3s;
+    }
+    #infoBox.expanded,#instructions.expanded {
+      max-height:300px;padding:16px;border-width:1px;
+    }
+    #infoBox p,#instructions p,#infoBox ul,#instructions ul {
+      margin-bottom:.8em;line-height:1.4;font-size:1rem;
+    }
+    #infoBox ul,#instructions ul{padding-left:1.2em;}
+  </style>
+</head>
+<body>
+  <canvas id="backgroundParticles"></canvas>
+  <header>
+    <span>Level: <span id="level">1</span></span>
+    <span>Moves: <span id="moves">0</span></span>
+    <button id="restartBtn">Restart</button>
+  </header>
+  <div class="game-area">
+    <div id="grid"></div>
+    <div id="winOverlay">✓ Level Complete!</div>
+  </div>
+  <button id="infoToggle">ⓘ</button>
+  <div id="infoBox">
+    <p><b>Logic Lights</b> was created by <b>Naadir</b> in 2024 with AI-assisted development.</p>
+    <ul>
+      <li>Tech Stack: HTML5, CSS3, Vanilla JavaScript (ES6), Canvas 2D.</li>
+      <li>Grid toggling mechanics demonstrating Boolean gates.</li>
+      <li>Responsive, accessible, no external frameworks.</li>
+    </ul>
+  </div>
+  <button id="toggleInstructions">▶ Instructions</button>
+  <div id="instructions">
+    <p><b>Objective:</b> Turn all lights OFF.</p>
+    <ul>
+      <li>Levels 1–3: basic toggle (Lights-Out style).</li>
+      <li>Levels 4–6: OR logic.</li>
+      <li>Levels 7–9: XOR logic.</li>
+      <li>Level ≥10: mixed AND/OR/XOR/NOT per tile.</li>
+      <li>Moves count clicks; try to minimize.</li>
+      <li>Click Restart to start over.</li>
+    </ul>
+  </div>
+  <script>
+    // Bubble background
+    const canvas=document.getElementById('backgroundParticles'),ctx=canvas.getContext('2d');
+    let parts=[];
+    function initParticles(){
+      canvas.width=innerWidth;canvas.height=innerHeight;parts=[];
+      for(let i=0;i<50;i++)parts.push({
+        x:Math.random()*canvas.width,
+        y:Math.random()*canvas.height,
+        r:5+Math.random()*25,
+        d:0.5+Math.random()*1.5,
+        a:Math.random()*2*Math.PI
+      });
+    }
+    function animateParticles(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      parts.forEach(p=>{
+        ctx.save();
+        ctx.globalAlpha=0.1+0.1*Math.sin(Date.now()/1000+p.a);
+        let g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+        g.addColorStop(0,'#fff');g.addColorStop(1,'#90caf9');
+        ctx.fillStyle=g;ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,2*Math.PI);ctx.fill();ctx.restore();
+        p.y-=p.d;
+        if(p.y+p.r<0){p.y=canvas.height+p.r;p.x=Math.random()*canvas.width;}
+      });
+      requestAnimationFrame(animateParticles);
+    }
+    window.addEventListener('resize',initParticles);
+    document.addEventListener('DOMContentLoaded',()=>{initParticles();animateParticles();initGame();});
+
+    // Game logic
+    const GRID_SIZE=5;
+    let level=1,moves=0,grid=[],gates=[];
+    const gridEl=document.getElementById('grid'),
+          lvlEl=document.getElementById('level'),
+          mvEl=document.getElementById('moves'),
+          restartBtn=document.getElementById('restartBtn'),
+          winOv=document.getElementById('winOverlay');
+    restartBtn.onclick=()=>{level=1;initGame();};
+
+    const GateToggle=s=>!s,GateAND=(s,c)=>s&&c,GateOR=(s,c)=>s||c,
+          GateXOR=(s,c)=>s!==c,GateNOT=s=>!s;
+    const gateFns={TOGGLE:GateToggle,AND:GateAND,OR:GateOR,XOR:GateXOR,NOT:GateNOT};
+
+    function initGame(){
+      moves=0;updateHUD();
+      grid=Array.from({length:GRID_SIZE},()=>Array(GRID_SIZE).fill(false));
+      for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++)
+        grid[i][j]=Math.random()<.5;
+      assignGates();renderGrid();
+    }
+    function getTier(){return Math.floor((level-1)/3);}
+    function assignGates(){
+      gates=Array.from({length:GRID_SIZE},()=>Array(GRID_SIZE).fill('TOGGLE'));
+      const tier=getTier();
+      if(tier===1)fillGate('OR');
+      else if(tier===2)fillGate('XOR');
+      else if(tier>=3){
+        const types=['AND','OR','XOR','NOT'];
+        for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++)
+          gates[i][j]=types[Math.floor(Math.random()*types.length)];
+      }
+    }
+    function fillGate(t){for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++)gates[i][j]=t;}
+    function renderGrid(){
+      gridEl.innerHTML='';
+      for(let i=0;i<GRID_SIZE;i++)for(let j=0;j<GRID_SIZE;j++){
+        let tile=document.createElement('div');
+        tile.className='tile '+(grid[i][j]?'on':'off');
+        tile.textContent=level>3?gates[i][j][0]:'';
+        tile.onclick=()=>clickTile(i,j);
+        gridEl.appendChild(tile);
+      }
+    }
+    function clickTile(i,j){
+      const center=grid[i][j];
+      [[0,0],[-1,0],[1,0],[0,-1],[0,1]].forEach(([dx,dy])=>{
+        const x=i+dx,y=j+dy;
+        if(x>=0&&x<GRID_SIZE&&y>=0&&y<GRID_SIZE){
+          const g=gates[x][y],fn=gateFns[g];
+          grid[x][y] = (g==='NOT'||g==='TOGGLE')?fn(grid[x][y]):fn(grid[x][y],center);
+        }
+      });
+      moves++;updateHUD();renderGrid();checkWin();
+    }
+    function updateHUD(){lvlEl.textContent=level;mvEl.textContent=moves;}
+    function checkWin(){
+      if(grid.flat().every(s=>!s)){
+        winOv.classList.add('show');
+        setTimeout(()=>{winOv.classList.remove('show');level++;initGame();},800);
+      }
+    }
+
+    // Info & instructions toggles
+    document.getElementById('infoToggle').onclick=()=>
+      document.getElementById('infoBox').classList.toggle('expanded');
+    document.getElementById('toggleInstructions').onclick=e=>{
+      const inst=document.getElementById('instructions'),
+            open=inst.classList.toggle('expanded');
+      e.target.textContent=(open?'▼ ':'▶ ')+'Instructions';
+    };
+  </script>
+</body>
+</html>
