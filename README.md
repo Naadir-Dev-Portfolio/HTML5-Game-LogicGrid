@@ -14,11 +14,10 @@
 - **Objective**  
   Turn **all** lights **OFF** in as few moves as possible. On success, you advance to more challenging logic tiers.
 
-Author
-Naadir – created with AI-assisted coding (GPT-4o) under my direction and supervision.
-Demonstrates end-to-end design and delivery of an interactive, educational web application.
+## Author
 
-Features
+**Naadir** – created with AI-assisted coding (GPT-4o) under my direction and supervision.  
+Demonstrates end-to-end design and delivery of an interactive, educational web application.  
 
 ## Features
 
