@@ -4,7 +4,7 @@
   "n": 4,
   "title": "Logic Grid Boolean",
   "img": "logicgridscreen.webp",
-  "desc": "Visual boolean logic gate puzzle — helps players build intuitive understanding of AND, OR and NOT operations.",
+  "desc": "Visual boolean logic gate puzzle, helps players build intuitive understanding of AND, OR and NOT operations.",
   "code": "https://github.com/Naadir-Dev-Portfolio/LogicGrid/blob/main/index.html",
   "demo": "https://logicgrid-by-naadir.netlify.app/",
   "tags": [

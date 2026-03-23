@@ -1,24 +1,24 @@
 # Logic Grid
 
-> Grid-based Boolean logic puzzle game built with HTML5, CSS3, and vanilla JavaScript.
+> Grid based Boolean logic puzzle game built with HTML5, CSS3, and vanilla JavaScript.
 
-[![HTML5](https://img.shields.io/badge/HTML5-Canvas-orange?style=flat-square&logo=html5)](https://html.spec.whatwg.org/)
-[![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow?style=flat-square&logo=javascript)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![CSS3](https://img.shields.io/badge/CSS3-Responsive-blue?style=flat-square&logo=css3)](https://www.w3.org/Style/CSS/)
+[![HTML5](https://img.shields.io/badge/HTML5-Canvas orange?style=flat square&logo=html5)](https://html.spec.whatwg.org/)
+[![JavaScript](https://img.shields.io/badge/JavaScript ES6-yellow?style=flat square&logo=javascript)](https://developer.mozilla.org/en US/docs/Web/JavaScript)
+[![CSS3](https://img.shields.io/badge/CSS3-Responsive blue?style=flat square&logo=css3)](https://www.w3.org/Style/CSS/)
 
 ---
 
 ## Overview
 
-Logic Grid is an educational puzzle game that challenges players to solve Boolean logic problems on a grid-based interface. Built entirely with vanilla JavaScript and HTML5, this game requires strategic thinking and logical reasoning to match all constraints and win. Perfect for computer science students and logic enthusiasts, Logic Grid provides an engaging way to practice Boolean algebra concepts.
+Logic Grid is an educational puzzle game that challenges players to solve Boolean logic problems on a grid based interface. Built entirely with vanilla JavaScript and HTML5, this game requires strategic thinking and logical reasoning to match all constraints and win. Perfect for computer science students and logic enthusiasts, Logic Grid provides an engaging way to practice Boolean algebra concepts.
 
-The game features procedurally-generated puzzles with progressive difficulty, real-time constraint validation, a polished dark interface, and immediate visual feedback. Players must carefully plan their moves to satisfy all logical conditions simultaneously, introducing various logic gate operations as difficulty increases.
+The game features procedurally generated puzzles with progressive difficulty, real-time constraint validation, a polished dark interface, and immediate visual feedback. Players must carefully plan their moves to satisfy all logical conditions simultaneously, introducing various logic gate operations as difficulty increases.
 
 ---
 
 ## Features
 
-- 5x5 grid-based puzzle interface
+- 5x5 grid based puzzle interface
 - Three tile states: ON (yellow), OFF (gray), UNKNOWN
 - Progressive difficulty with escalating logic operations:
   - Levels 1-3: Basic TOGGLE logic
@@ -30,9 +30,9 @@ The game features procedurally-generated puzzles with progressive difficulty, re
 - Win condition detection with animated overlay
 - Visual gate operation indicators
 - Animated particle background via Canvas 2D
-- Dark-themed responsive design
+- Dark themed responsive design
 - Toggleable help panels with keyboard support
-- Accessible high-contrast interface
+- Accessible high contrast interface
 
 ---
 
@@ -53,7 +53,7 @@ The game features procedurally-generated puzzles with progressive difficulty, re
 
 ### Play Online
 
-Visit the live game at: https://logicgrid-by-naadir.netlify.app/
+Visit the live game at: https://logicgrid by naadir.netlify.app/
 
 ### Local Development
 
@@ -70,10 +70,10 @@ Then navigate to `http://localhost:8000` in your browser.
 
 ## Tech Stack
 
-- HTML5 Canvas — 2D graphics and animated background
-- CSS3 — Responsive grid layout, animations, and styling
-- Vanilla JavaScript (ES6) — Game logic and puzzle generation
-- Netlify — Cloud deployment
+- HTML5 Canvas, 2D graphics and animated background
+- CSS3, Responsive grid layout, animations, and styling
+- Vanilla JavaScript (ES6), Game logic and puzzle generation
+- Netlify, Cloud deployment
 
 ---
 
@@ -96,6 +96,6 @@ The game presents a grid of cells where each can be toggled between ON, OFF, and
 
 ## Related Projects
 
-- [HTML5-Game-Algebraverse](https://github.com/Naadir-Dev-Portfolio/HTML5-Game-Algebraverse)
-- [HTML5-Game-Hexamatch](https://github.com/Naadir-Dev-Portfolio/HTML5-Game-Hexamatch)
-- [HTML5-Game-RainDrops](https://github.com/Naadir-Dev-Portfolio/HTML5-Game-RainDrops)
+- [HTML5-Game Algebraverse](https://github.com/Naadir Dev Portfolio/HTML5-Game Algebraverse)
+- [HTML5-Game Hexamatch](https://github.com/Naadir Dev Portfolio/HTML5-Game Hexamatch)
+- [HTML5-Game RainDrops](https://github.com/Naadir Dev Portfolio/HTML5-Game RainDrops)
